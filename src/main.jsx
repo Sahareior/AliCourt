@@ -6,9 +6,13 @@ import {
   RouterProvider,
 } from "react-router";
 import App from './App.jsx'
+
 import ChatBody from './components/dashboard/components/chatSection/ChatBody.jsx';
 import Calender from './components/dashboard/components/Calender.jsx';
 import Class from './components/dashboard/components/Class.jsx';
+import { Provider } from 'react-redux';
+import { store } from './redux/store.js';
+import Profile from './components/dashboard/components/profile/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +31,10 @@ const router = createBrowserRouter([
         path: 'class',
         element: <Class />
       },
+      {
+        path: 'profile',
+        element: <Profile />
+      }
 
     ]
   },
@@ -34,8 +42,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <RouterProvider router={router}>
-
-  </RouterProvider>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 )

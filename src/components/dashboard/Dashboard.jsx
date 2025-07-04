@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -6,13 +6,34 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, Popover, theme } from 'antd';
+import { FaUser, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
+import { MdSubscriptions, MdPrivacyTip, MdSupportAgent } from "react-icons/md";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { RiShieldCheckLine } from "react-icons/ri";
+import { FaChevronDown } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from 'react-router';
+
 const { Header, Sider, Content } = Layout;
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate()
+  
+  
+
+  const hide = () => {
+    setOpen(false);
+  };
+  const handleOpenChange = newOpen => {
+    setOpen(newOpen);
+  };
+
+    useEffect(() => {
+    navigate('/new-chat');
+  }, [navigate]);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -44,6 +65,7 @@ const Dashboard = () => {
               label: 'Calender',
               
             },
+             
             {
               key: '/class',
               icon: <VideoCameraOutlined />,
@@ -115,12 +137,23 @@ const Dashboard = () => {
   <BsThreeDots />
 </div>
 </div>
+
+
 {/* ................ */}
 </div>
+
 </div>
+
+    <Link to='/new-chat'>
+        <Button style={{
+        background: 'linear-gradient(91.53deg, #051DA9 2.34%, #591DA9 96.97%)'
+
+    }} className='w-[187px] h-[28px] mt-64 text-white' >Upgrade to pro</Button>
+    </Link>
+
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header style={{ padding: 0, background: colorBgContainer }} className='flex justify-between items-center'>
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -131,12 +164,49 @@ const Dashboard = () => {
               height: 64,
             }}
           />
+
+     <Popover
+      content={
+      <div className="flex flex-col gap-4 text-[16px]">
+  <Link to='/profile' className="flex items-center gap-2">
+    <FaUser /> Profile
+  </Link >
+  <h3 className="flex items-center gap-2">
+    <MdSubscriptions /> Manage Subscription
+  </h3>
+  <h3 className="flex items-center gap-2">
+    <FaQuestionCircle /> FAQ
+  </h3>
+  <h3 className="flex items-center gap-2">
+    <MdSupportAgent /> Help & Support
+  </h3>
+  <h3 className="flex items-center gap-2">
+    <IoDocumentTextOutline /> Terms & Conditions
+  </h3>
+  <h3 className="flex items-center gap-2">
+    <MdPrivacyTip /> Privacy
+  </h3>
+  <h3 className="flex items-center gap-2 text-red-500 font-semibold">
+    <FaSignOutAlt /> Logout
+  </h3>
+</div>
+      }
+  
+      trigger="click"
+      open={open}
+      onOpenChange={handleOpenChange}
+    >
+            <div className='pr-7 flex items-center gap-5'>
+            <img className='h-[40px] w-[40px] rounded-full object-cover' src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+            <FaChevronDown size={20} />
+          </div>
+    </Popover>
         </Header>
         <Content
         className='h-[85vh]'
           style={{
             margin: '24px 16px',
-            padding: 24,
+    
             
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
