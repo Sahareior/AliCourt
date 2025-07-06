@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
-import { Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Input, message } from 'antd';
 import { FaEye } from 'react-icons/fa6';
 import AuthLayout from './AuthLayout';
 
+// import { useNavigation } from 'react-router';
+import { useSigninMutation } from '../../redux/Slices/apiSlice';
+import { useNavigate } from 'react-router';
 
-const Login = () => {
+
+const Login = ({onLogin}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+const [signin, { isLoading }] = useSigninMutation(); 
+
+    const onFinish = async () => {
+    try {
+      const response = await signin({
+        email: email,
+        password: password,
+      }).unwrap();
+
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken);
+        onLogin(response.accessToken);
+        message.success("Login successful!");
+      } else {
+        message.error(response.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error(
+        error?.data?.message || "An error occurred during login"
+      );
+    }
+  };
+
 
   return (
     <AuthLayout
       title="Login To Account"
       subtitle="Please enter your email and password to continue"
       buttonText="Login"
-      onSubmit={() => console.log('Login', { email, password })}
+     onSubmit={onFinish}
     >
       <div className="w-full">
         <h2>Email</h2>

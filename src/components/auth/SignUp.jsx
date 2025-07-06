@@ -43,7 +43,7 @@ const handleClick = async ()=>{
       title="Create an Account"
       subtitle="Please enter your info to sign up"
       buttonText="Sign Up"
-      onSubmit={() => console.log('SignUp', { username, email, password, confirm })}
+      onSubmit={handleClick}
     >
       <div className="w-full">
         <h2>Username</h2>
@@ -62,7 +62,7 @@ const handleClick = async ()=>{
         <Input placeholder="Confirm Password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         <FaEye className="absolute top-8 right-4 cursor-pointer" />
 
-        <Button onClick={()=> handleClick()} type='primary'>SignUp</Button>
+        {/* <Button onClick={()=> handleClick()} type='primary'>SignUp</Button> */}
       </div>
     </AuthLayout>
   );

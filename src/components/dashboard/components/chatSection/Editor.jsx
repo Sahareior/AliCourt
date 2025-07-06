@@ -6,38 +6,9 @@ import TextStyle from '@tiptap/extension-text-style';
 import Heading from '@tiptap/extension-heading';
 import { useLocation } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { updatedMessage } from '../../../../redux/Slices/userSlice';
+import { addEdited, updatedMessage } from '../../../../redux/Slices/userSlice';
 
-const messages = [
-  {
-    id: 1038,
-    sent_by: 'user',
-    message_content: 'Hii',
-    model_name: 'Chartwright',
-    timestamp: '2025-07-05T13:45:56.448229Z',
-  },
-  {
-    id: 1039,
-    sent_by: 'bot',
-    message_content: 'Hello! How can I assist you today?\n',
-    model_name: 'Chartwright',
-    timestamp: '2025-07-05T13:45:57.022484Z',
-  },
-  {
-    id: 1072,
-    sent_by: 'user',
-    message_content: 'hyy',
-    model_name: 'Chartwright',
-    timestamp: '2025-07-05T15:57:12.924124Z',
-  },
-  {
-    id: 1073,
-    sent_by: 'bot',
-    message_content: 'Hello! How can I assist you today?\n',
-    model_name: 'Chartwright',
-    timestamp: '2025-07-05T15:57:13.743389Z',
-  },
-];
+
 
 
 function htmlToMessages(html) {
@@ -128,7 +99,7 @@ const generateHTML = (messages) => {
     content: generateHTML(messages),
      onUpdate({ editor }) {
     const html = editor.getHTML();
-    dispatch(updatedMessage({id,messages}))
+    // dispatch(updatedMessage(chat,messages))
     console.log('Updated HTML:', html);
   },
   });
@@ -144,6 +115,7 @@ const generateHTML = (messages) => {
   onClick={() => {
     const html = editor?.getHTML();
     const jsonMessages = htmlToMessages(html);
+    dispatch(addEdited({chat:id,jsonMessages}))
     console.log('JSON Output:', jsonMessages);
   }}
   className="mt-4 px-4 py-2 bg-green-600 text-white rounded"

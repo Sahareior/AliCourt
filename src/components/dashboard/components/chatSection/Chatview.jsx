@@ -15,7 +15,7 @@ const Chatview = () => {
   const location = useLocation();
   const chat = location?.state?.date;
   const messages = chat?.messages || [];
-    console.log('all messages', messages)
+    console.log('all messages', chat.chat)
   return (
     <div className="p-6 bg-[#fefefe] min-h-screen font-mono text-sm">
       {/* Top Button Bar */}

@@ -26,6 +26,20 @@ export const apiSlice = createApi({
       }),
     }),
 
+signin: build.mutation({
+  query: (loginData) => ({
+    url: '/authentication_app/signin/',
+    method: 'POST',
+    body: loginData,
+  }),
+}),
+    logout: build.mutation({
+      query: () => ({
+        url: '/authentication_app/logout/',
+        method: 'POST',
+      }),
+    }),
+
      sendMessage: build.mutation({
       query: (data) => ({
         url: 'chat/create_chat/',
@@ -54,4 +68,6 @@ export const apiSlice = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery, useSendMessageMutation,useAddMessageToChatMutation,useSignupMutation,useGetMessagesQuery,useGetChatByIdQuery } = apiSlice
+export const { useGetPokemonByNameQuery, useSendMessageMutation,
+  useAddMessageToChatMutation,useSignupMutation,
+  useGetMessagesQuery,useGetChatByIdQuery, useSigninMutation,useLogoutMutation} = apiSlice

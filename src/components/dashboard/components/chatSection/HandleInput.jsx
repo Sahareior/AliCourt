@@ -3,6 +3,7 @@ import { IoSendSharp } from 'react-icons/io5';
 import { Input } from 'antd';
 import {
   useAddMessageToChatMutation,
+  useGetMessagesQuery,
   useSendMessageMutation
 } from '../../../../redux/Slices/apiSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +14,7 @@ const { TextArea } = Input;
 const HandleInput = () => {
   const [message, setMessage] = useState('');
   const [sendMessage, { isLoading: sending }] = useSendMessageMutation();
+  const { data: chats, error, refetch } = useGetMessagesQuery();
   const [addMessageToChat, { isLoading: adding }] = useAddMessageToChatMutation();
 const dispatch = useDispatch()
   const loading = sending || adding;
@@ -41,6 +43,7 @@ console.log(selectedChat)
       dispatch(userConversation(response.data))
 // console.log('This is Response', response.data)
       setMessage('');
+      refetch()
     } catch (err) {
       console.error('Send failed:', err);
     }

@@ -10,7 +10,7 @@ const EditPlans = () => {
         <div>
          {
             edited.map(items =>(
-                  <Link to='/edit-chat' state={{date:items}} key={items.id} className='flex justify-between px-6 mt-3  items-center'>
+                  <Link to='/edit-chat' state={{date:items}} key={items?.id} className='flex cursor-pointer justify-between px-6 mt-3  items-center'>
                   <h4>Last Chat</h4>
                   <BsThreeDots />
                 </Link>

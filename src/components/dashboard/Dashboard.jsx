@@ -18,6 +18,7 @@ import { clearChat } from '../../redux/Slices/userSlice';
 import { useDispatch } from 'react-redux';
 import RecentChat from './components/chatSection/RecentChat';
 import EditPlans from './components/chatSection/EditPlans';
+import { useLogoutMutation } from '../../redux/Slices/apiSlice';
 
 const { Header, Sider, Content } = Layout;
 const Dashboard = () => {
@@ -25,12 +26,19 @@ const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [logout] = useLogoutMutation()
   
-  
+const handleLogout = async () => {
+  try {
+    await logout(); 
+    localStorage.removeItem('accessToken');
+    window.location.href = '/'; // 
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+};
 
-  const hide = () => {
-    setOpen(false);
-  };
+
   const handleOpenChange = newOpen => {
     setOpen(newOpen);
   };
@@ -113,8 +121,6 @@ const Dashboard = () => {
 <EditPlans />
 </div>
 
-
-{/* ................ */}
 </div>
 
 </div>
@@ -161,7 +167,7 @@ const Dashboard = () => {
   <h3 className="flex items-center gap-2">
     <MdPrivacyTip /> Privacy
   </h3>
-  <h3 className="flex items-center gap-2 text-red-500 font-semibold">
+  <h3 onClick={()=> handleLogout()} className="flex items-center gap-2 cursor-pointer text-red-500 font-semibold">
     <FaSignOutAlt /> Logout
   </h3>
 </div>
@@ -172,7 +178,7 @@ const Dashboard = () => {
       onOpenChange={handleOpenChange}
     >
             <div className='pr-7 flex items-center gap-5'>
-            <img className='h-[40px] w-[40px] rounded-full object-cover' src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
+            <img className='h-[40px] w-[40px] cursor-pointer rounded-full object-cover' src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
             <FaChevronDown size={20} />
           </div>
     </Popover>

@@ -6,14 +6,15 @@ import { MessageOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setSelectedChat, userConversation } from '../../../../redux/Slices/userSlice';
 import { useGetMessagesQuery } from '../../../../redux/Slices/apiSlice';
+import { useNavigate } from 'react-router';
 
 
 const { Text } = Typography;
 
 const RecentChat = () => {
       const dispatch = useDispatch();
-  const { data: chats, error, isLoading } = useGetMessagesQuery();
-
+  const { data: chats, error, isLoading,refatch } = useGetMessagesQuery();
+const navigate = useNavigate()
 
  console.log('chats', chats?.data)
 
@@ -22,6 +23,7 @@ const RecentChat = () => {
     console.log('ca',chat)
         dispatch(setSelectedChat(chat.id))
        dispatch(userConversation(chat))
+       navigate('/new-chat')
   };
 
   if (isLoading) {
@@ -44,7 +46,7 @@ const RecentChat = () => {
 <div>
 {
     chats?.data.map(data=>(
-             <div onClick={()=> handleChatSelect(data)} className='flex justify-between px-6 mt-3  items-center'>
+             <div onClick={()=> handleChatSelect(data)} className='flex cursor-pointer justify-between px-6 mt-3  items-center'>
      <h4>Last Chat</h4>
      <BsThreeDots />
    </div>

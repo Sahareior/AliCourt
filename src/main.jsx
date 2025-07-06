@@ -17,6 +17,7 @@ import Login from './components/auth/Login.jsx';
 import SignUp from './components/auth/SignUp.jsx';
 import Chatview from './components/dashboard/components/chatSection/Chatview.jsx';
 import EditLive from './components/dashboard/components/chatSection/EditLive.jsx';
+import ClassBySec from './components/dashboard/components/ClassBySec.jsx';
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,14 @@ const router = createBrowserRouter([
       },
       {
         path: 'class',
-        element: <Class />
+        element: <Class />,
+        children:[
+          
+          {
+            path: 'allclass/:id',
+            element: <ClassBySec />
+          }
+        ]
       },
       {
         path: 'profile',
@@ -62,6 +70,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>

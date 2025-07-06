@@ -2,10 +2,18 @@ import React, { useState } from 'react';
 import { Button } from 'antd';
 import CustomModal from '../../others/Modal';
 import { useSelector } from 'react-redux';
+import { Link, Outlet, useParams } from 'react-router'; // 👈 Make sure Outlet is imported
 
 const Class = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const classes = useSelector((state) => state.user.classes || []);
+    const { id } = useParams(); // get dynamic id from route
+
+    if(id){
+      return(
+        <Outlet />
+      )
+    }
 
   return (
     <div className="p-6">
@@ -25,19 +33,23 @@ const Class = () => {
       <div className="flex flex-wrap gap-4">
         {classes.length > 0 ? (
           classes.map((info, index) => (
-            <div
+            <Link
+              to={`/class/allclass/${info.id || 5}`} // you can use dynamic id if you have it
               key={index}
               className="bg-blue-600 text-white p-4 rounded shadow-md hover:bg-blue-700 transition w-fit max-w-xs"
             >
-              {info}
-            </div>
+              {info.input}
+            </Link>
           ))
         ) : (
           <p className="text-gray-500 italic">No classes created yet.</p>
         )}
       </div>
 
-      <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CustomModal isModalOpen={isModalOpen} classes={classes} setIsModalOpen={setIsModalOpen} />
+
+      {/* 👇 This is where the nested route will render */}
+      <Outlet />
     </div>
   );
 };

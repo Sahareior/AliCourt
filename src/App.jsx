@@ -1,23 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Login from './components/auth/Login'
-import Verify from './components/auth/Verify'
-import SetPassword from './components/auth/SetPassword'
-import SignUp from './components/auth/SignUp'
-import Dashboard from './components/dashboard/Dashboard'
+import { useEffect, useState } from 'react';
+import Login from './components/auth/Login';
+import Dashboard from './components/dashboard/Dashboard';
 
 function App() {
-  const user = true
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('accessToken');
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
+
+  const handleLogin = (token) => {
+    localStorage.setItem('accessToken', token);
+    setToken(token);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    setToken(null);
+  };
 
   return (
-<>
-{
-  user ? <Dashboard /> : <Login />
-}
-</>
-  )
+    <>
+      {token ? (
+        <Dashboard onLogout={handleLogout} />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
+    </>
+  );
 }
 
-export default App
+export default App;
