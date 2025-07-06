@@ -1,64 +1,76 @@
-import React, { useState } from 'react';
-import { useSendMessageMutation } from '../../../../redux/Slices/apiSlice';
+import React, { useEffect, useState } from 'react';
+import { IoSendSharp } from 'react-icons/io5';
+import { Input } from 'antd';
+import {
+  useAddMessageToChatMutation,
+  useSendMessageMutation
+} from '../../../../redux/Slices/apiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearChat, userConversation } from '../../../../redux/Slices/userSlice';
+
+const { TextArea } = Input;
 
 const HandleInput = () => {
+  const [message, setMessage] = useState('');
+  const [sendMessage, { isLoading: sending }] = useSendMessageMutation();
+  const [addMessageToChat, { isLoading: adding }] = useAddMessageToChatMutation();
+const dispatch = useDispatch()
+  const loading = sending || adding;
+  const selectedChat = useSelector(state => state.user.selectedChat);
+console.log(selectedChat)
 
-     const [message, setMessage] = useState('');
-     const [sendMessage] = useSendMessageMutation()
 
-     const selectedChat ={
-        
-     }
-
-   const handleSend = async () => {
+  const handleSend = async () => {
     if (!message.trim()) return;
-
 
     try {
       let response;
 
-      if (selectedChat?.id) {
-        // Existing chat
+      if (selectedChat) {
         response = await addMessageToChat({
-          chat_id: selectedChat.id,
+          chat_id: selectedChat,
           model_name: 'Chartwright',
           message_content: message,
         }).unwrap();
       } else {
-        // New chat
         response = await sendMessage({
           model_name: 'Chartwright',
           message_content: message,
         }).unwrap();
-
-        // if (response?.data?.id) {
-        //   dispatch(setSelectedChat(response.data)); // Set new chat in Redux
-        // }
       }
-
+      dispatch(userConversation(response.data))
+// console.log('This is Response', response.data)
       setMessage('');
-console.log(response)
-    //   if (response?.data?.messages) {
-    //    dispatch(setChat([...chat, ...response.data.messages]));
-
-    //     // Optional scroll to bottom
-    //     setTimeout(() => {
-    //       const chatContainer = document.getElementById('chat-container');
-    //       if (chatContainer) {
-    //         chatContainer.scrollTop = chatContainer.scrollHeight;
-    //       }
-    //     }, 100);
-    //   }
-
     } catch (err) {
       console.error('Send failed:', err);
     }
   };
-    return (
-        <div>
-            
-        </div>
-    );
+
+
+
+  return (
+    <div className='relative'>
+      <TextArea
+        rows={3}
+        value={message}
+        onChange={e => setMessage(e.target.value)}
+        onPressEnter={(e) => {
+          if (!e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+          }
+        }}
+        placeholder="Enter your message..."
+        className="pr-10 resize-none"
+        disabled={loading}
+      />
+      <IoSendSharp
+        size={25}
+        className={`absolute right-4 top-6 cursor-pointer ${loading ? 'text-gray-400' : 'text-blue-500'}`}
+        onClick={handleSend}
+      />
+    </div>
+  );
 };
 
 export default HandleInput;

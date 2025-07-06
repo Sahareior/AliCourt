@@ -1,5 +1,6 @@
 // components/AuthLayout.jsx
 import React from 'react';
+import { Link } from 'react-router';
 
 const AuthLayout = ({
   title,
@@ -53,7 +54,7 @@ const AuthLayout = ({
 
         {!hideSocial && (
           <>
-            <p>Don’t Have an Account? <span className="text-blue-400 cursor-pointer">Sign up?</span></p>
+            <p>Don’t Have an Account? <Link to='/signup' className="text-blue-400 cursor-pointer">Sign up?</Link ></p>
 
             <div className="flex justify-center items-center gap-1">
               <div className="bg-black h-[0.1px] w-10" />

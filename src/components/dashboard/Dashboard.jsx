@@ -14,12 +14,17 @@ import { RiShieldCheckLine } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from 'react-router';
+import { clearChat } from '../../redux/Slices/userSlice';
+import { useDispatch } from 'react-redux';
+import RecentChat from './components/chatSection/RecentChat';
+import EditPlans from './components/chatSection/EditPlans';
 
 const { Header, Sider, Content } = Layout;
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   
   
 
@@ -47,7 +52,7 @@ const Dashboard = () => {
                 </div>
 
     <Link to='/new-chat'>
-        <Button style={{
+        <Button onClick={()=> dispatch(clearChat())} style={{
         background: 'linear-gradient(91.53deg, #051DA9 2.34%, #591DA9 96.97%)'
 
     }} className='w-[187px] h-[28px] text-white' >Create Chat</Button>
@@ -87,22 +92,7 @@ const Dashboard = () => {
        <Button className='text-xs border-none h-[22px]'>All Plans </Button>
 </div>
 <div className='h-28 mt-5 overflow-y-auto'>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
+<RecentChat />
 </div>
 {/* ................ */}
 </div>
@@ -120,22 +110,7 @@ const Dashboard = () => {
        <Button className='text-xs border-none h-[22px]'>All Plans </Button>
 </div>
 <div className='h-28 mt-5 overflow-y-auto'>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
-  <div className='flex justify-between px-6 mt-3  items-center'>
-  <h4>Last Chat</h4>
-  <BsThreeDots />
-</div>
+<EditPlans />
 </div>
 
 
@@ -148,7 +123,7 @@ const Dashboard = () => {
         <Button style={{
         background: 'linear-gradient(91.53deg, #051DA9 2.34%, #591DA9 96.97%)'
 
-    }} className='w-[187px] h-[28px] mt-64 text-white' >Upgrade to pro</Button>
+    }} className='w-[187px] h-[28px] mt-5 text-white' >Upgrade to pro</Button>
     </Link>
 
       </Sider>
@@ -203,9 +178,9 @@ const Dashboard = () => {
     </Popover>
         </Header>
         <Content
-        className='h-[85vh]'
+        className='max-h-[85vh]'
           style={{
-            margin: '24px 16px',
+            margin: '',
     
             
             background: colorBgContainer,

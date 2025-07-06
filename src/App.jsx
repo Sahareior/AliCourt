@@ -9,10 +9,13 @@ import SignUp from './components/auth/SignUp'
 import Dashboard from './components/dashboard/Dashboard'
 
 function App() {
+  const user = true
 
   return (
 <>
-<Dashboard />
+{
+  user ? <Dashboard /> : <Login />
+}
 </>
   )
 }

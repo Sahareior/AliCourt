@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Modal } from 'antd';
+import { useDispatch } from 'react-redux';
+import { addClass } from '../../redux/Slices/userSlice';
 
 const CustomModal = ({ isModalOpen, setIsModalOpen }) => {
+  const [input,setInput] = useState('')
+const dispatch = useDispatch()
+
   const handleOk = () => {
     setIsModalOpen(false);
+      dispatch(addClass(input))
+    
   };
 
   const handleCancel = () => {
@@ -21,7 +28,7 @@ const CustomModal = ({ isModalOpen, setIsModalOpen }) => {
       cancelText="Cancel"
     >
 <div className='felx justify-center items-center'>
-    <Input placeholder='Enter your class name' />
+    <Input  onChange={e => setInput(e.target.value)} placeholder='Enter your class name' />
 </div>
     </Modal>
   );

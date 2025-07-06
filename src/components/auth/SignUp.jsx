@@ -1,13 +1,42 @@
 import React, { useState } from 'react';
-import { Input } from 'antd';
+import { Button, Input } from 'antd';
 import { FaEye } from 'react-icons/fa6';
 import AuthLayout from './AuthLayout'; // adjust path
+import { useDispatch } from 'react-redux';
+import { useSignupMutation } from '../../redux/Slices/apiSlice';
+import { useNavigate } from 'react-router';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const navigate = useNavigate()
+const [signup] = useSignupMutation()
+ 
+
+
+
+const handleClick = async ()=>{
+   try {
+      const response = await signup({
+        email,
+        password,
+      }).unwrap();
+
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken);
+        console.log("Account Create successful!");
+        navigate("/");
+      } else {
+        console.log('error')
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+
+    }
+}
+
 
   return (
     <AuthLayout
@@ -32,6 +61,8 @@ const SignUp = () => {
         <h2>Confirm Password</h2>
         <Input placeholder="Confirm Password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         <FaEye className="absolute top-8 right-4 cursor-pointer" />
+
+        <Button onClick={()=> handleClick()} type='primary'>SignUp</Button>
       </div>
     </AuthLayout>
   );
