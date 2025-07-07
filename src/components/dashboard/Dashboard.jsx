@@ -14,7 +14,7 @@ import { RiShieldCheckLine } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from 'react-router';
-import { clearChat } from '../../redux/Slices/userSlice';
+import { clear, clearChat } from '../../redux/Slices/userSlice';
 import { useDispatch } from 'react-redux';
 import RecentChat from './components/chatSection/RecentChat';
 import EditPlans from './components/chatSection/EditPlans';
@@ -32,7 +32,7 @@ const handleLogout = async () => {
   try {
     await logout(); 
     localStorage.removeItem('accessToken');
-    window.location.href = '/'; // 
+    window.location.href = '/'; 
   } catch (error) {
     console.error('Logout failed:', error);
   }
@@ -60,7 +60,7 @@ const handleLogout = async () => {
                 </div>
 
     <Link to='/new-chat'>
-        <Button onClick={()=> dispatch(clearChat())} style={{
+        <Button onClick={()=> dispatch(clear())} style={{
         background: 'linear-gradient(91.53deg, #051DA9 2.34%, #591DA9 96.97%)'
 
     }} className='w-[187px] h-[28px] text-white' >Create Chat</Button>

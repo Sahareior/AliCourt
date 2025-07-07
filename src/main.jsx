@@ -18,6 +18,7 @@ import SignUp from './components/auth/SignUp.jsx';
 import Chatview from './components/dashboard/components/chatSection/Chatview.jsx';
 import EditLive from './components/dashboard/components/chatSection/EditLive.jsx';
 import ClassBySec from './components/dashboard/components/ClassBySec.jsx';
+import RecentHistory from './components/dashboard/components/chatSection/RecentHistory.jsx';
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: 'editLiveChat',
         element: <EditLive />
+      },
+      {
+        path: 'history',
+        element: <RecentHistory />
       }
 
     ]

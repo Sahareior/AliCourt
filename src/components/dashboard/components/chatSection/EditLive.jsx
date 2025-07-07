@@ -33,6 +33,10 @@ const EditLive = () => {
     setSave(true); // Optional: can be used to trigger a toast
   };
 
+  const handleEdit=()=>{
+    
+  }
+
   return (
     <div className="p-6 bg-[#fefefe] min-h-screen font-mono text-sm">
       {/* Top Actions */}
@@ -57,7 +61,7 @@ const EditLive = () => {
 
       {/* Chat Content */}
       {!edit ? (
-        <div className="whitespace-pre-wrap leading-relaxed border border-dashed border-gray-300 p-4 bg-[#fffffc] shadow-inner rounded-md max-w-3xl">
+        <div className="whitespace-pre-wrap leading-relaxed border border-dashed border-gray-300 p-4 bg-[#fffffc] shadow-inner rounded-md max-w-full">
           {messages.length > 0 ? (
             messages.map((msg, idx) => (
               <div key={msg.id || idx} className="mb-4">
@@ -82,7 +86,7 @@ const EditLive = () => {
           )}
         </div>
       ) : (
-        <Editor messages={messages} save={save} id={chat} />
+         <Editor messages={messages} id={chat} chat={chat} />
       )}
 
       {/* Modal */}

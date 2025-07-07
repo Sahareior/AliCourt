@@ -36,7 +36,7 @@ const MenuBar = ({ editor }) => {
   if (!editor) return null;
 
   return (
-    <div className="flex gap-2 flex-wrap border-b pb-2 mb-2">
+    <div className="flex gap-2  flex-wrap border-b pb-2 mb-2">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={`px-2 py-1 border rounded ${editor.isActive('bold') ? 'bg-black text-white' : ''}`}
@@ -83,7 +83,10 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const Editor = ({messages,id}) => {
+const Editor = ({messages,id,chat}) => {
+
+  console.log('cga',chat)
+
 const dispatch = useDispatch()
   
 const generateHTML = (messages) => {
@@ -105,22 +108,23 @@ const generateHTML = (messages) => {
   });
 
   return (
-    <div className="max-w-3xl mx-auto mt-6 p-4 border rounded shadow bg-white">
+    <div className="max-w-full mx-auto mt-6 p-4  rounded shadow bg-white">
       <MenuBar editor={editor} />
       <EditorContent
+      
         editor={editor}
-        className="prose max-w-none min-h-[300px] border rounded p-4"
+        className="prose ProseMirror max-w- border-none  rounded p-4"
       />
       <button
   onClick={() => {
     const html = editor?.getHTML();
     const jsonMessages = htmlToMessages(html);
-    dispatch(addEdited({chat:id,jsonMessages}))
+    dispatch(addEdited({chat:chat,jsonMessages}))
     console.log('JSON Output:', jsonMessages);
   }}
   className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
 >
-  Convert to JSON & Log
+  Save
 </button>
 
     </div>

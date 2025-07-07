@@ -26,7 +26,7 @@ const handleClick = async ()=>{
 
       if (response.accessToken) {
         localStorage.setItem("accessToken", response.accessToken);
-        console.log("Account Create successful!");
+        console.log("Response", response);
         navigate("/");
       } else {
         console.log('error')

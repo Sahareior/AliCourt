@@ -17,3 +17,9 @@
 ::-webkit-scrollbar {
     display: none;
 }
+
+/* In your global CSS or inside a <style jsx global> if using Next.js */
+.ProseMirror {
+  padding: 1rem; /* or Tailwind's p-4 equivalent */
+  outline: none; /* optional: remove default focus outline */
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
 import { Input } from 'antd';
 import {
@@ -7,48 +7,66 @@ import {
   useSendMessageMutation
 } from '../../../../redux/Slices/apiSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearChat, userConversation } from '../../../../redux/Slices/userSlice';
+import { setSelectedChat, userChat, userConversation } from '../../../../redux/Slices/userSlice';
 
 const { TextArea } = Input;
 
 const HandleInput = () => {
   const [message, setMessage] = useState('');
   const [sendMessage, { isLoading: sending }] = useSendMessageMutation();
-  const { data: chats, error, refetch } = useGetMessagesQuery();
   const [addMessageToChat, { isLoading: adding }] = useAddMessageToChatMutation();
-const dispatch = useDispatch()
-  const loading = sending || adding;
+  const { refetch } = useGetMessagesQuery();
+  const dispatch = useDispatch();
   const selectedChat = useSelector(state => state.user.selectedChat);
-console.log(selectedChat)
+
+  const loading = sending || adding;
 
 
-  const handleSend = async () => {
-    if (!message.trim()) return;
+console.log('this is selected',selectedChat)
 
-    try {
-      let response;
+const handleSend = async () => {
+  if (!message.trim()) return;
 
-      if (selectedChat) {
-        response = await addMessageToChat({
-          chat_id: selectedChat,
-          model_name: 'Chartwright',
-          message_content: message,
-        }).unwrap();
-      } else {
-        response = await sendMessage({
-          model_name: 'Chartwright',
-          message_content: message,
-        }).unwrap();
-      }
-      dispatch(userConversation(response.data))
-// console.log('This is Response', response.data)
-      setMessage('');
-      refetch()
-    } catch (err) {
-      console.error('Send failed:', err);
+  try {
+    let response;
+
+    if (selectedChat) {
+      // Continue existing conversation
+      response = await addMessageToChat({
+        chat_id: selectedChat,
+        model_name: 'Chartwright',
+        message_content: message,
+      }).unwrap();
+
+      console.log('add messassssada')
+
+      dispatch(userConversation({
+        ...response.data,
+        chat_id: selectedChat
+      }));
+       
+    } else {
+      // Create new conversation
+      response = await sendMessage({
+        model_name: 'Chartwright',
+        message_content: message,
+      }).unwrap();
+
+      dispatch(setSelectedChat(response.data.id))
+      const newChat = response.data;
+      dispatch(userChat(newChat));     // Sets selectedChat
+      dispatch(userConversation({
+        ...newChat,
+        chat_id: newChat.id
+      }));
     }
-  };
 
+    setMessage('');
+    refetch();
+  } catch (err) {
+    console.error('Send failed:', err);
+  }
+};
 
 
   return (

@@ -12,16 +12,26 @@ import { useGetChatByIdQuery } from '../../../../redux/Slices/apiSlice';
 
 const ChatBody = () => {
   const [open, setOpen] = useState(false);
-
   const allConversation = useSelector(state => state.user.chat);
   const selectedChat = useSelector(state => state.user.selectedChat);
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useGetChatByIdQuery(selectedChat);
+  const {
+    data,
+    isLoading,
+    refetch,
+    isFetching
+  } = useGetChatByIdQuery(selectedChat, {
+    skip: !selectedChat, // Only run if chat is selected
+    refetchOnMountOrArgChange: true, // <- important
+  });
 
   useEffect(() => {
-    dispatch(clearChat()); // Clear previous messages on chat switch
-  }, [selectedChat]);
+    if (selectedChat) {
+      dispatch(clearChat()); // clear previous messages on chat switch
+      refetch(); // <- force refetch even if cache exists
+    }
+  }, [selectedChat, dispatch, refetch]);
 
   useEffect(() => {
     if (data?.data?.messages) {
@@ -38,23 +48,18 @@ const ChatBody = () => {
     setOpen(newOpen);
   };
 
-  if(isLoading || allConversation.length<0){
-    return(
-      <p>Loading....</p>
-    )
+  if (isLoading || isFetching || allConversation.length < 0) {
+    return <p>Loading....</p>;
   }
 
   return (
     <div className="">
-      {/* Top Right Menu */}
       <div className="flex justify-end p-2">
         <Popover
           content={
             <div className='flex flex-col gap-3'>
-              <Link to='/editLiveChat' state={{data:allConversation}}>Edit</Link>
-              <Link to='/calender'>
-                <h4>Pin To Calendar</h4>
-              </Link>
+              <Link to='/editLiveChat' state={{ data: allConversation }}>Edit</Link>
+              <Link to='/calender'><h4>Pin To Calendar</h4></Link>
             </div>
           }
           trigger="click"
@@ -65,16 +70,14 @@ const ChatBody = () => {
         </Popover>
       </div>
 
-      {/* Chat Section */}
       <div className="h-[85vh] flex flex-col bg-gray-100 p-4">
         <div
           id="scroller"
           className="flex-1 overflow-y-auto space-y-2 mb-4"
           style={{ scrollBehavior: 'smooth' }}
         >
-          {/* AntD Spinner while loading */}
-          {isLoading ? (
-            <div className="flex justify-center z-50 items-center h-full">
+          {isFetching ? (
+            <div className="flex justify-center items-center h-full">
               <Spin size="large" tip="Loading messages..." />
             </div>
           ) : allConversation?.length > 0 ? (
@@ -82,11 +85,10 @@ const ChatBody = () => {
               chat.messages.map(msg => (
                 <div
                   key={msg.id}
-                  className={`max-w-xs px-4 py-3 rounded-lg shadow ${
-                    msg.sent_by === 'user'
-                      ? 'bg-blue-500 text-white self-end ml-auto'
-                      : 'bg-white text-black self-start mr-auto'
-                  }`}
+                  className={`max-w-xs px-4 py-3 rounded-lg shadow ${msg.sent_by === 'user'
+                    ? 'bg-blue-500 text-white self-end ml-auto'
+                    : 'bg-white text-black self-start mr-auto'
+                    }`}
                 >
                   {msg.message_content}
                 </div>
@@ -97,7 +99,6 @@ const ChatBody = () => {
           )}
         </div>
 
-        {/* Input Component */}
         <div className="relative">
           <HandleInput />
         </div>

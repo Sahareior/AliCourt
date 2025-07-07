@@ -33,23 +33,27 @@ export const userSlice = createSlice({
     decremented: (state) => {
       state.value -= 1;
     },
+
 addEdited: (state, action) => {
   const { chat, jsonMessages } = action.payload;
-  const existing = state.edited.find(e => e.id === chat.id);
+  const existingIndex = state.edited.findIndex(e => e.id === chat.id);
 
-  if (!existing) {
-    // Push new chat with replaced messages
+  if (existingIndex === -1) {
+    
     state.edited.push({ ...chat, messages: jsonMessages });
   } else {
-    // Update existing chat's messages
-    existing.messages = jsonMessages;
+   
+    state.edited[existingIndex] = { 
+      ...state.edited[existingIndex], 
+      messages: jsonMessages 
+    };
   }
 
   localStorage.setItem('edited', JSON.stringify(state.edited));
 },
 
     userChat: (state, action) => {
-      state.message.push(action.payload);
+      state.chat.push(action.payload);
     },
     userClass: (state, action) => {
       state.classes.push(action.payload);
@@ -63,15 +67,26 @@ addEdited: (state, action) => {
       state.classWithChat.push(action.payload);
       localStorage.setItem('ClassWithChat', JSON.stringify(state.classWithChat));
     },
-    userConversation: (state, action) => {
-      state.chat.push(action.payload);
-    },
+
+    
+userConversation: (state, action) => {
+  console.log('userConversation action payload:', action.payload);
+  state.chat = [action.payload]; 
+},
+
+
     clearChat: (state) => {
       state.chat = [];
     },
+
     setSelectedChat: (state, action) => {
       state.selectedChat = action.payload;
     },
+
+    clear: (state) => {
+  state.chat = [];
+  state.selectedChat = null; // 
+},
     updatedMessage: (state, action) => {
       const chat = state.edited.find(chat => chat.id === action.payload.id);
       if (chat) {
@@ -96,7 +111,9 @@ export const {
   userClass,
   updatedMessage,
   addEdited,
-  addClassWithChat
+  addClassWithChat,
+
+  clear,
 } = userSlice.actions;
 
 export default userSlice.reducer;
