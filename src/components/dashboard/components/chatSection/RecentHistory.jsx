@@ -6,7 +6,7 @@ import { MessageOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { setSelectedChat, userConversation } from '../../../../redux/Slices/userSlice';
 import { useGetMessagesQuery } from '../../../../redux/Slices/apiSlice';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 
 const { Text } = Typography;

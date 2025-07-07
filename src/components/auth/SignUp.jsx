@@ -4,7 +4,7 @@ import { FaEye } from 'react-icons/fa6';
 import AuthLayout from './AuthLayout'; // adjust path
 import { useDispatch } from 'react-redux';
 import { useSignupMutation } from '../../redux/Slices/apiSlice';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');

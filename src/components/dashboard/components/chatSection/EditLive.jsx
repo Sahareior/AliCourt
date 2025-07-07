@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router'; 
+import { useLocation } from 'react-router-dom'; 
 import { Button, Tooltip, Empty } from 'antd';
 import {
   CalendarOutlined,
@@ -17,6 +17,7 @@ import { addEdited } from '../../../../redux/Slices/userSlice';
 const EditLive = () => {
   const [edit, setEdit] = useState(false);
   const [save, setSave] = useState(false);
+  const [calender,setCalender] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = useLocation();
@@ -34,14 +35,14 @@ const EditLive = () => {
   };
 
   const handleEdit=()=>{
-    
+
   }
 
   return (
     <div className="p-6 bg-[#fefefe] min-h-screen font-mono text-sm">
       {/* Top Actions */}
       <div className="flex flex-wrap gap-3 mb-6">
-        <Button icon={<CalendarOutlined />}>Pin to Calendar</Button>
+        <Button onClick={()=> setCalender(state => !state)} icon={<CalendarOutlined />}>Pin to Calendar</Button>
         <Button icon={<CheckCircleOutlined />} onClick={() => setIsModalOpen(true)}>
           Add to Class
         </Button>

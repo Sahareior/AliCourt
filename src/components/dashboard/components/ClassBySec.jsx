@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router';
+import { Link, useParams } from 'react-router-dom';
 
 const ClassBySec = () => {
   const { id } = useParams(); // get dynamic id from route

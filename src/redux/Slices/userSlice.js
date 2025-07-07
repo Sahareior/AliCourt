@@ -20,6 +20,7 @@ export const userSlice = createSlice({
       { id: 3, sender: 'receiver', text: 'Doing great, thanks for asking!' },
     ],
     chat: [],
+    pinned: [],
     selectedChat: null,
     value: 0,
     classes: getLocal('classes', []),
@@ -68,6 +69,7 @@ addEdited: (state, action) => {
       localStorage.setItem('ClassWithChat', JSON.stringify(state.classWithChat));
     },
 
+    // localStorage.setItem('datetime', JSON.stringify(updated)); 
     
 userConversation: (state, action) => {
   console.log('userConversation action payload:', action.payload);
@@ -96,7 +98,19 @@ userConversation: (state, action) => {
       } else {
         console.warn('❌ Chat not found for ID:', action.payload.id);
       }
-    }
+    },
+
+    pinnedCalendar: (state, action) => {
+      const { conversationArray, date } = action.payload;
+      const existingChat = state.pinned.find(chat => chat.id === conversationArray.id);
+
+      if (existingChat) {
+        existingChat.date = date; // Update the date if chat already exists
+      } else {
+        state.pinned.push({ id: conversationArray, date }); // Add new pinned chat
+      }
+    },
+
   },
 });
 
@@ -112,7 +126,7 @@ export const {
   updatedMessage,
   addEdited,
   addClassWithChat,
-
+  pinnedCalendar,
   clear,
 } = userSlice.actions;
 

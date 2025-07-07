@@ -2,25 +2,36 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
 
 const Calender = () => {
   const [value, setValue] = useState(new Date());
+  const [time, setTime] = useState(null);
 
-  // Get from localStorage and parse
-  const time = JSON.parse(localStorage.getItem('datetime') || '{}');
-  console.log('Saved time:', time);
+ const date = useSelector((state) => state.user.pinned || []);
 
-  // Create pinned date if both date and time exist
-  const pinnedDate = time?.date && time?.time
-    ? dayjs(`${time.date}T${time.time}`).startOf('day').toDate()
-    : null;
-
-  // Optional: Set calendar value to pinned on load
+console.log('pinned', date)
   useEffect(() => {
-    if (pinnedDate) {
-      setValue(pinnedDate);
+    try {
+      const stored = localStorage.getItem('datetime');
+      const parsed = stored ? JSON.parse(stored) : null;
+
+      if (parsed?.date && parsed?.time) {
+        setTime(parsed);
+        const pinned = dayjs(`${parsed.date}T${parsed.time}`).startOf('day').toDate();
+        setValue(pinned);
+      }
+    } catch (error) {
+      console.warn('Invalid datetime in localStorage:', error);
+      // Optionally clear corrupted value
+      localStorage.removeItem('datetime');
     }
-  }, [pinnedDate]);
+  }, []);
+
+  const pinnedDate =
+    time?.date && time?.time
+      ? dayjs(`${time.date}T${time.time}`).startOf('day').toDate()
+      : null;
 
   return (
     <div className="">
@@ -50,5 +61,6 @@ const Calender = () => {
     </div>
   );
 };
+
 
 export default Calender;

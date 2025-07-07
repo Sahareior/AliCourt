@@ -6,7 +6,7 @@ import { IoSendSharp } from "react-icons/io5";
 import 'antd/dist/reset.css';
 import { clearChat, userConversation } from '../../../../redux/Slices/userSlice';
 import { Popover, Spin } from 'antd';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import HandleInput from './HandleInput';
 import { useGetChatByIdQuery } from '../../../../redux/Slices/apiSlice';
 

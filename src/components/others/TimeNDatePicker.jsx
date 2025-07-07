@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { DatePicker, TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useDispatch } from 'react-redux';
+import { pinnedCalendar } from '../../redux/Slices/userSlice';
 
 dayjs.extend(customParseFormat);
 
-const TimeNDatePicker = () => {
+const TimeNDatePicker = ({data}) => {
   const [datetime, setDatetime] = useState(() => {
     // Load initial value from localStorage if available
     const stored = localStorage.getItem('datetime');
     return stored ? JSON.parse(stored) : { date: null, time: null };
   });
+
+  const dispatch = useDispatch()
 
   const handleChange = (type, value) => {
     const formattedValue = value ? value.format(type === 'date' ? 'YYYY-MM-DD' : 'HH:mm') : null;
@@ -20,7 +24,9 @@ const TimeNDatePicker = () => {
     };
 
     setDatetime(updated);
-    localStorage.setItem('datetime', JSON.stringify(updated)); // Save to localStorage
+    // localStorage.setItem('datetime', JSON.stringify(updated)); 
+    dispatch(pinnedCalendar({data:data, time:updated}))
+    // Save to localStorage
   };
 
   return (

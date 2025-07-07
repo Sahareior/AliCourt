@@ -13,16 +13,19 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { RiShieldCheckLine } from "react-icons/ri";
 import { FaChevronDown } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
-import { Link, Outlet, useNavigate } from 'react-router';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { clear, clearChat } from '../../redux/Slices/userSlice';
 import { useDispatch } from 'react-redux';
 import RecentChat from './components/chatSection/RecentChat';
 import EditPlans from './components/chatSection/EditPlans';
 import { useLogoutMutation } from '../../redux/Slices/apiSlice';
+import CustomPlanModal from '../others/CustomPlanModal';
 
 const { Header, Sider, Content } = Layout;
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [open, setOpen] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -43,9 +46,14 @@ const handleLogout = async () => {
     setOpen(newOpen);
   };
 
-    useEffect(() => {
+// REMOVE this useEffect completely OR
+// ONLY run it on the root route like this:
+useEffect(() => {
+  if (window.location.pathname === '/') {
     navigate('/new-chat');
-  }, [navigate]);
+  }
+}, [navigate]);
+
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -54,10 +62,10 @@ const handleLogout = async () => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}  className="bg-white">
         <div className="bg-white " />
-                <div className='flex gap-3 justify-center pb-10 pt-4  items-center'>
+                <Link to='/new-chat' className='flex gap-3 justify-center pb-10 pt-4  items-center'>
                     <img className='w-[45.88px] h-[33.02px]' src="/images/auth/Vector.png" alt="" />
                     <h4 className='text-[#521DA4] font-bold'>GAMEPLAN</h4>
-                </div>
+                </Link>
 
     <Link to='/new-chat'>
         <Button onClick={()=> dispatch(clear())} style={{
@@ -125,7 +133,7 @@ const handleLogout = async () => {
 
 </div>
 
-    <Link to='/new-chat'>
+    <Link onClick={()=>setIsModalOpen(true)}>
         <Button style={{
         background: 'linear-gradient(91.53deg, #051DA9 2.34%, #591DA9 96.97%)'
 
@@ -152,7 +160,7 @@ const handleLogout = async () => {
   <Link to='/profile' className="flex items-center gap-2">
     <FaUser /> Profile
   </Link >
-  <h3 className="flex items-center gap-2">
+  <h3 onClick={()=> setIsModalOpen(true)} className="flex items-center gap-2">
     <MdSubscriptions /> Manage Subscription
   </h3>
   <h3 className="flex items-center gap-2">
@@ -195,6 +203,7 @@ const handleLogout = async () => {
         >
          <Outlet />
         </Content>
+         <CustomPlanModal isModalOpen={isModalOpen}  setIsModalOpen={setIsModalOpen} />
       </Layout>
     </Layout>
   );

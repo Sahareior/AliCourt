@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from 'antd';
 import CustomModal from '../../others/Modal';
 import { useSelector } from 'react-redux';
-import { Link, Outlet, useParams } from 'react-router'; // 👈 Make sure Outlet is imported
+import { Link, Outlet, useParams } from 'react-router-dom'; // 👈 Make sure Outlet is imported
 
 const Class = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

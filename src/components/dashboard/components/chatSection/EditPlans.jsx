@@ -1,7 +1,7 @@
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const EditPlans = () => {
     const edited = useSelector(state => state.user.edited)

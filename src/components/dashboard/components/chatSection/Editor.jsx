@@ -4,7 +4,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextStyle from '@tiptap/extension-text-style';
 import Heading from '@tiptap/extension-heading';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addEdited, updatedMessage } from '../../../../redux/Slices/userSlice';
 

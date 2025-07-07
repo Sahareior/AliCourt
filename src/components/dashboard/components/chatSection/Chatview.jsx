@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { Button, Tooltip, Empty, Popover } from 'antd';
 import {
   CalendarOutlined,
@@ -10,10 +10,12 @@ import {
 } from '@ant-design/icons';
 import Editor from './Editor';
 import TimeNDatePicker from '../../../others/TimeNDatePicker';
+import CustomModal from '../../../others/Modal';
 
 const Chatview = () => {
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
   const chat = location?.state?.date;
   const messages = chat?.messages || [];
@@ -25,7 +27,7 @@ const Chatview = () => {
 
   const calendarContent = (
     <div className="p-4">
-      <TimeNDatePicker />
+      <TimeNDatePicker data={chat} />
       {chatDate && (
         <div className="mt-4 text-sm text-gray-600">
           <div className="font-medium">Original chat time:</div>
@@ -53,7 +55,9 @@ const Chatview = () => {
         >
           <Button icon={<CalendarOutlined />}>Pin to Calendar</Button>
         </Popover>
-        <Button icon={<CheckCircleOutlined />}>Add to Class</Button>
+        <Button icon={<CheckCircleOutlined />} onClick={() => setIsModalOpen(true)}>
+                 Add to Class
+               </Button>
         <Button onClick={() => setEdit(state => !state)} icon={<EditOutlined />}>Edit</Button>
         <Button icon={<CopyOutlined />}>Copy</Button>
         <Button icon={<ExportOutlined />}>Export</Button>
@@ -116,6 +120,12 @@ const Chatview = () => {
           <Editor messages={messages} id={chat.id} chat={chat} />
         </div>
       )}
+
+           <CustomModal
+        isModalOpen={isModalOpen}
+        chat={chat}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 };
