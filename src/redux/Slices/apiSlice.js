@@ -62,6 +62,21 @@ signin: build.mutation({
       query: (id) => `chat/get_a_chat_content/${id}/`,
     }),
 
+deleteChatById: build.mutation({
+  query: (id) => ({
+    url: `api/chatbot/delete-chat/${id}`,
+    method: 'DELETE'
+  })
+}),
+
+updateChatName: build.mutation({
+  query: ({ id, title }) => ({
+    url: `api/chatbot/update-chat-name/${id}`,
+    method: 'PUT',
+    body: { title },
+  }),
+}),
+
 
   }),
 })
@@ -70,4 +85,5 @@ signin: build.mutation({
 // auto-generated based on the defined endpoints
 export const { useGetPokemonByNameQuery, useSendMessageMutation,
   useAddMessageToChatMutation,useSignupMutation,
-  useGetMessagesQuery,useGetChatByIdQuery, useSigninMutation,useLogoutMutation} = apiSlice
+  useGetMessagesQuery,useGetChatByIdQuery,
+   useSigninMutation,useLogoutMutation,useDeleteChatByIdMutation,useUpdateChatNameMutation } = apiSlice

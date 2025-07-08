@@ -22,6 +22,7 @@ export const userSlice = createSlice({
     chat: [],
     pinned: [],
     selectedChat: null,
+    chatLoading:false,
     value: 0,
     classes: getLocal('classes', []),
     classWithChat: getLocal('ClassWithChat',[]),
@@ -71,11 +72,52 @@ addEdited: (state, action) => {
 
     // localStorage.setItem('datetime', JSON.stringify(updated)); 
     
+// Modify the userConversation reducer
 userConversation: (state, action) => {
-  console.log('userConversation action payload:', action.payload);
-  state.chat = [action.payload]; 
+  const payload = action.payload;
+  const chatId = payload.chat_id || payload.id;
+  
+  // Find existing chat
+  const existingChatIndex = state.chat.findIndex(chat => chat.id === chatId);
+  
+  if (existingChatIndex !== -1) {
+    // Merge new messages with existing ones
+    const existingMessages = state.chat[existingChatIndex].messages;
+    const newMessages = payload.messages;
+
+    
+    // Create a map for quick lookup
+    const messageMap = new Map();
+    existingMessages.forEach(msg => messageMap.set(msg.id, msg));
+    
+    // Merge messages without duplicates
+    const mergedMessages = [...existingMessages];
+    newMessages.forEach(newMsg => {
+      if (!messageMap.has(newMsg.id)) {
+        mergedMessages.push(newMsg);
+        messageMap.set(newMsg.id, newMsg);
+      }
+    });
+    
+    // Update chat with merged messages
+    state.chat[existingChatIndex] = {
+      ...state.chat[existingChatIndex],
+      ...payload,
+      messages: mergedMessages
+    };
+  } else {
+    // Create new chat entry
+    state.chat.push({
+      id: chatId,
+      ...payload,
+      messages: payload.messages
+    });
+  }
 },
 
+  setChatLoading: (state,action) =>{
+    state.chatLoading = action.payload
+  },
 
     clearChat: (state) => {
       state.chat = [];
@@ -127,6 +169,7 @@ export const {
   addEdited,
   addClassWithChat,
   pinnedCalendar,
+  setChatLoading,
   clear,
 } = userSlice.actions;
 

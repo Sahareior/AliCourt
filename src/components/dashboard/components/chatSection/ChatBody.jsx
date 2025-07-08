@@ -14,6 +14,7 @@ const ChatBody = () => {
   const [open, setOpen] = useState(false);
   const allConversation = useSelector(state => state.user.chat);
   const selectedChat = useSelector(state => state.user.selectedChat);
+  const isChatLoading = useSelector(state => state.user.chatLoading);
   const dispatch = useDispatch();
 
   const {
@@ -81,8 +82,8 @@ const ChatBody = () => {
               <Spin size="large" tip="Loading messages..." />
             </div>
           ) : allConversation?.length > 0 ? (
-            allConversation.map(chat =>
-              chat.messages.map(msg => (
+            allConversation?.map(chat =>
+              chat.messages?.map(msg => (
                 <div
                   key={msg.id}
                   className={`max-w-xs px-4 py-3 rounded-lg shadow ${msg.sent_by === 'user'

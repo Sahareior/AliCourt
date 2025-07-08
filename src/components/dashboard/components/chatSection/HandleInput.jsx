@@ -7,7 +7,7 @@ import {
   useSendMessageMutation
 } from '../../../../redux/Slices/apiSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedChat, userChat, userConversation } from '../../../../redux/Slices/userSlice';
+import { setChatLoading, setSelectedChat, userChat, userConversation } from '../../../../redux/Slices/userSlice';
 
 const { TextArea } = Input;
 
@@ -21,50 +21,74 @@ const HandleInput = () => {
 
   const loading = sending || adding;
 
-
-console.log('this is selected',selectedChat)
-
 const handleSend = async () => {
   if (!message.trim()) return;
-
+  
+  // Generate unique ID for optimistic update
+  const optimisticId = `opt-${Date.now()}`;
+  
+  // Create optimistic payload - only user message
+  const optimisticPayload = {
+    chat_id: selectedChat || optimisticId,
+    messages: [{
+      id: optimisticId,
+      sent_by: 'user',
+      message_content: message,
+      isOptimistic: true
+    }]
+  };
+  dispatch(setChatLoading(true))
+  // Dispatch only the user message optimistically
+  dispatch(userConversation(optimisticPayload));
+  
   try {
     let response;
+    let actualChatId = selectedChat;
 
     if (selectedChat) {
-      // Continue existing conversation
+      // Existing chat
       response = await addMessageToChat({
         chat_id: selectedChat,
         model_name: 'Chartwright',
         message_content: message,
       }).unwrap();
 
-      console.log('add messassssada')
-
-      dispatch(userConversation({
-        ...response.data,
-        chat_id: selectedChat
-      }));
-       
+      actualChatId = selectedChat;
     } else {
-      // Create new conversation
+      // New chat
       response = await sendMessage({
         model_name: 'Chartwright',
         message_content: message,
       }).unwrap();
 
-      dispatch(setSelectedChat(response.data.id))
-      const newChat = response.data;
-      dispatch(userChat(newChat));     // Sets selectedChat
-      dispatch(userConversation({
-        ...newChat,
-        chat_id: newChat.id
-      }));
+      actualChatId = response.data.id;
+      dispatch(setSelectedChat(actualChatId));
+      dispatch(userChat(response.data));
     }
 
+    // Filter out user messages from API response
+    const aiMessages = response.data.messages.filter(msg => msg.sent_by !== 'user');
+    
+    // Create payload with only AI response
+    const aiPayload = {
+      chat_id: actualChatId,
+      messages: aiMessages
+    };
+
+    // Dispatch only AI response
+    dispatch(userConversation(aiPayload));
+    
     setMessage('');
     refetch();
+    dispatch(setChatLoading(false))
   } catch (err) {
     console.error('Send failed:', err);
+    // Remove optimistic message on error
+    dispatch(userConversation({
+      chat_id: selectedChat || optimisticId,
+      messages: []
+    }));
+
   }
 };
 
